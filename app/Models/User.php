@@ -50,17 +50,17 @@ class User extends Authenticatable
 
     public function records()
     {
-        return $this->haMany(Record::class);
+        return $this->hasMany(Record::class);
     }
 
     public function bodyWeight()
     {
-        return $this->hasMany(bodyWeight::class);
+        return $this->hasMany(BodyWeight::class);
     }
 
     public function calendar()
     {
-        return $this->hasMany(calendar::class);
+        return $this->hasMany(Calendar::class);
     }
     
 }

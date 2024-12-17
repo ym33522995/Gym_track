@@ -27,8 +27,8 @@ class Exercise extends Model
     public function templates()
     {
         return $this->belongsToMany(
-            Record::class, 
-            'record_exercise', 
+            Template::class, 
+            'template_content', 
             'exercise_id', 
             'template_id',
         )->withPivot(['order', 'weight', 'rep', 'set'])->withTimestamps();
