@@ -9,19 +9,24 @@ class Template extends Model
 {
     use HasFactory;
 
-    public function user()
+    protected $fillable = [
+        'name',
+        'user_id',
+    ];
+
+    public function users()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function exercises()
+    public function templateContents()
     {
-        return $this->belongsToMany(
-            Exercise::class, // the model related to
-            'template_content', // the name of the pivot table
-            'template_id', // foreign key
-            'exercise_id', // foreign key
-        )->withPivot(['order', 'weight', 'rep', 'set'])->withTimestamps();
+        return $this->hasMany(TemplateContent::class);
+    }
+
+    public function getAllTemplates()
+    {
+        return $this->orderBy('updated_at', 'DESC')->get();
     }
 
 }

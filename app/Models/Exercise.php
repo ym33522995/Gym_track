@@ -9,6 +9,11 @@ class Exercise extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'category_id',
+    ];
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -18,19 +23,15 @@ class Exercise extends Model
     {
         return $this->belongsToMany(
             Record::class, 
+            TemplateContent::class,
             'record_exercise', 
             'exercise_id', 
             'record_id',
         )->withPivot(['weight', 'rep', 'notes'])->withTimestamps();
     }
 
-    public function templates()
+    public function templateContents()
     {
-        return $this->belongsToMany(
-            Template::class, 
-            'template_content', 
-            'exercise_id', 
-            'template_id',
-        )->withPivot(['order', 'weight', 'rep', 'set'])->withTimestamps();
+        return $this->hasMany(TemplateContent::class);
     }
 }

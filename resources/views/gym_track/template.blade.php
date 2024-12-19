@@ -24,13 +24,34 @@
     <main>
         <h2>Template Page</h2>
         <p>Please select your template.</p>
-        <a href="{{ route('dashboard') }}" style="color: #007BFF;">Go to Dashboard</a>
-        <a href="/selection">{{ $template->name }}</a>
+        <div>
+            @foreach($templates as $template)
+                <a href="/template/{{ $template->id }}">{{ $template->name }}</a>
+                <form action="/template/delete/{{ $template->id }}" id="delete_{{ $template->id }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="button" onclick="deletePost({{ $template->id }})">delete</button>
+                </form>
+            @endforeach
+
+        </div>
+
+        <a href="/template/create">+</a>
         
 
     </main>
 
-    <!-- Optional JavaScript -->
-    <script src="{{ asset('js/script.js') }}"></script>
+    <!-- <script src="{{ asset('js/script.js') }}"></script> -->
+
+    <script>
+        function deletePost(templateId) {
+            'use strict';
+
+            if (confirm("Are you sure you want to delete this template?")) {
+                document.getElementById(`delete_${templateId}`).submit();
+            }
+        }
+    </script>
+
 </body>
 </html>

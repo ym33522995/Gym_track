@@ -19,10 +19,24 @@ Route::get('/', function () {
     return view('gym_track.home');
 });
 
+Route::get('/template/create', [TemplateController::class, 'create']);
+
+Route::post('/template/store', [TemplateController::class, 'store'])->middleware('auth');
+
+Route::delete('template/delete/{template}', [TemplateController::class, 'delete']);
+
 Route::get('/template', [TemplateController::class, 'index']);
 
+Route::get('/template/{template}', [TemplateController::class, 'show']);
+
+
+
+
+
+
+
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('gym_track.home');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
