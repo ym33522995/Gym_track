@@ -1,7 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/template">Template</a></li>
+                    <li><a href="/exercise">Exercise</a></li>
+                    <li><a href="/report">Report</a></li>
+                    <li><a href="/profile">Profile</a></li>
+                </ul>
+            </nav>
         </h2>
     </x-slot>
 

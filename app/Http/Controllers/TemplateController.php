@@ -70,7 +70,7 @@ class TemplateController extends Controller
             }
         }
 
-        return redirect('/template/ . {template}');
+        return redirect('/template/' . $template->id);
     }
 
 
@@ -82,10 +82,10 @@ class TemplateController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Template $template)
+    public function show()
     {
         //
-        return view('gym_track.workout')->with('template', $template);
+        // return view('gym_track.workout')->with('template', $template);
     }
 
     /**
@@ -93,7 +93,7 @@ class TemplateController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        // I think this fucntion is going to be used in the workout page when the user adds exercise
     }
 
     /**
@@ -111,4 +111,26 @@ class TemplateController extends Controller
     {
         //
     }
+
+    public function quit()
+    {
+        session()->forget('new_exercises');
+        session()->forget('workout_state');
+        // session()->forget('return_url');
+        return redirect('/template');
+    }
+
+    public function updateName(Request $request, $id)
+    {
+        $request->validate([
+            'new_name' => 'required|string|max:255'
+        ]);
+
+        $template = Template::findOrFail($id);
+
+        $template->update(['name' => $request->input('new_name')]);
+
+        return redirect('/template');
+    }
+
 }
