@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Exercise;
 
 class ExerciseController extends Controller
 {
@@ -33,9 +34,10 @@ class ExerciseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Exercise $exercise)
     {
         //
+        return view('gym_track.exercise')->with(['exercises' => $exercise->get()]);
     }
 
     /**
