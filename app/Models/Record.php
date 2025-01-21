@@ -28,4 +28,9 @@ class Record extends Model
             'exercise_id', // foreign key
         )->withPivot(['weight', 'rep', 'notes'])->withTimestamps();
     }
+
+    public function recordExercises()
+    {
+        return $this->hasMany(RecordExercise::class, 'record_id', 'id');
+    }
 }

@@ -7,6 +7,7 @@ use App\Models\Template;
 use App\Models\Record;
 use App\Models\Exercise;
 use App\Models\TemporaryRecord;
+use App\Models\TemplateContent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -23,6 +24,7 @@ class RecordController extends Controller
             return redirect('/login');
         }
 
+        // dd($newExercises);
         $newExercises = session()->get('new_exercises', []);
         $temporaryRecords = TemporaryRecord::where('user_id', $userId)->get();
 
@@ -124,10 +126,11 @@ class RecordController extends Controller
         return redirect('/template');
     }
 
-    public function addExercise(Template $template)
+    public function addExercise(Template $template, Request $request)
     {
         $exercise = new Exercise();
-        return view('gym_track.addExercise')->with(['exercises' => $exercise->get(), 'template' => $template]);
+        $from = $request->query('from', 'workout');
+        return view('gym_track.addExercise')->with(['exercises' => $exercise->get(), 'template' => $template, 'from' => $from]);
     }
 
     public function saveExercise(Request $request, Template $template)
@@ -139,6 +142,7 @@ class RecordController extends Controller
             if (isset($data['selected']) && $data['selected'] == 1) {
                 $exercise = Exercise::find($exerciseId);
                 $formattedExercises[$exerciseId] = [
+                    'exercise_id' => $exerciseId,
                     'name' => $exercise->name,
                     'weight' => $data['weight'],
                     'rep' => $data['rep'],
@@ -147,16 +151,103 @@ class RecordController extends Controller
             }
         }
 
-        // dd($formattedExercises);
+        $template = Template::findOrFail($template->id);
+        $currentOrder = (TemplateContent::where('template_id', $template->id)->count())+1;
+        
+        $newExercises = session()->get('new_exercises', []);
+        foreach ($newExercises as $exercise) {
+            TemplateContent::create([
+                'template_id' => $template->id,
+                'exercise_id' => $exercise['exercise_id'],
+                'weight' => $exercise['weight'],
+                'rep' => $exercise['rep'],
+                'set' => $exercise['set'],
+                'order' => ++$currentOrder,
+            ]);
+        }
+
+        // dd($newExercises);
 
         $existingExercises = session()->get('new_exercises', []);
         $mergedExercises = array_merge($existingExercises, $formattedExercises);
 
         // dd($mergedExercises);
         session()->put('new_exercises', $mergedExercises);
-        // $returnURL = session()->get('return_url', route('workout.page', ['template' => $template->id]));
+        $from = $request->input('from', 'workout');
+        if ($from === 'editTemplate') {
+            return redirect("/template/edit/{$template->id}");
+        }
+
         return redirect("/template/{$template->id }");
     }
+
+
+    public function totalWeights()
+    {
+        $userId = Auth::id();
+        if (!$userId) {
+            return response()->json([], 401);
+        }
+
+        $totalWeight = RECORD::where('user_id', $userId)
+            ->with('recordExercises')
+            ->get()
+            ->flatMap(function($record) {  // Extracts all recordExercises across all the user's records into a single collection.
+                return $record->recordExercises;
+            })
+            ->sum(function($exercise) {
+                return $exercise->weight * $exercise->rep;
+            });
+        
+        return $totalWeight;
+    }
+
+
+    public function editWorkout($id)
+    {
+        $template = Template::with('templateContents.exercise')->findOrFail($id);
+        return view('gym_track.editWorkout', compact('template'));
+    }
+
+    public function saveWorkoutEdits(Request $request, $id)
+    {
+        $request->validate([
+            'exercises' => 'required|array',
+        ]);
+
+        $template = Template::findOrFail($id);
+        $changesReflected = $request->input('reflect_changes') === 'yes';
+
+        if ($changesReflected) {
+            TemplateContent::where('template_id', $template->id)->delete();
+            foreach ($request->exercises as $exerciseId => $data) {
+                foreach ($data['sets'] as $setIndex => $set) {
+                    TemplateContent::create([
+                        'template_id' => $template->id,
+                        'exercise_id' => $exerciseId,
+                        'weight' => $set['weight'],
+                        'rep' => $set['rep'],
+                        'set' => $setIndex,
+                    ]);
+                }
+            }
+        }
+
+        return redirect('/template');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function saveTemporaryRecord(Request $request, Template $template)
     {
@@ -194,5 +285,6 @@ class RecordController extends Controller
             TemporaryRecord::where('user_id', $userId)->delete();
         }
     }
+
 
 }

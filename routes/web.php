@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\RecordController;
+use App\Http\Controllers\BodyWeightController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\RecordExerciseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,21 +28,34 @@ Route::get('/workout/{template}/addExercise', [RecordController::class, 'addExer
 Route::post('/workout/{template}/saveExercise', [RecordController::class, 'saveExercise']);
 
 Route::patch('/template/editName/{template}', [TemplateController::class, 'updateName']);
+Route::get('/template/edit/{template}', [TemplateController::class, 'edit']);
 Route::get('/template/quit', [TemplateController::class, 'quit']);
 Route::get('/template/create', [TemplateController::class, 'create']);
 Route::post('/template/store', [TemplateController::class, 'store'])->middleware('auth');
 Route::delete('template/delete/{template}', [TemplateController::class, 'delete']);
 Route::get('/template', [TemplateController::class, 'index']);
+Route::post('/template/{template}/deleteExercise', [TemplateController::class, 'deleteExercise']);
+Route::post('/template/{template}/duplicateExercise', [TemplateController::class, 'duplicateExercise']);
 Route::get('/template/{template}', [RecordController::class, 'index']);
+Route::patch('/template/update/{template}', [TemplateController::class, 'update']);
 
-Route::get('/exercise', [ExerciseController::class, 'show']);
+
+Route::post('/exercise/{exerciseId}/getNotes', [RecordExerciseController::class, 'getNotes']);
+Route::post('/exercise/{exerciseId}/saveNotes', [RecordExerciseController::class, 'saveNotes']);
+Route::get('/exercise', [ExerciseController::class, 'index']);
+
 
 Route::get('/report', [RecordController::class, 'show']);
 
 Route::post('/record/store', [RecordController::class, 'store']);
 
+Route::post('/home/body-weights', [BodyWeightController::class, 'store']);
+Route::get('/home/body-weights/date', [BodyWeightController::class, 'getDate']);
 
+Route::get('/calendar', [EventController::class, 'show']);
+Route::get('/calendar/record-dates', [EventController::class, 'getRecordDates']);
 
+Route::get('/total-weight', [RecordController::class, 'totalWeights']);
 
 
 

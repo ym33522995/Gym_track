@@ -22,6 +22,7 @@
         <h2>You are now using template {{ $template->name }}</h2>
         <form action="/workout/{{ $template->id }}/saveExercise" method="POST">
             @csrf
+            <input type="hidden" name="from" value="{{ $from }}">
             @foreach($exercises as $exercise)
                 <div>
                     <label>

@@ -27,10 +27,21 @@
         <input type="text" id="searchExercise" placeholder="Enter exercise name" oninput="searchExercises()">
         <br><br>
 
+        <h3>Filter by Category</h3>
+        <button onclick="filterByCategory('Chest')">Chest</button>
+        <button onclick="filterByCategory('Back')">Back</button>
+        <button onclick="filterByCategory('Leg')">Leg</button>
+        <button onclick="filterByCategory('Shoulder')">Shoulder</button>
+        <button onclick="filterByCategory('Biceps')">Biceps</button>
+        <button onclick="filterByCategory('Triceps')">Triceps</button>
+        <button onclick="filterByCategory('Abs')">Abs</button>
+        <button onclick="filterByCategory('Forearm')">Forearm</button>
+        <button onclick="filterByCategory('Full body')">Full body</button>
+
         <p>These are the exercises:</p>
         <div id="exerciseList">
             @foreach($exercises as $exercise)
-                <div class="exercise-item">{{ $exercise->name }}</div>
+                <div class="exercise-item" data-category="{{ $exercise->category->name }}">{{ $exercise->name }}</div>
             @endforeach
         </div>
 
@@ -54,6 +65,24 @@
             });
 
             document.getElementById('noExerciseMessage').style.display = hasMatch ? 'none' : 'block';
+        }
+
+
+        function filterByCategory(selectedCategory) {
+            const exercises = document.querySelectorAll('.exercise-item');
+            let exists = false;
+
+            exercises.forEach(exercise => {
+                const itemCategory = exercise.getAttribute('data-category');
+                if (selectedCategory === 'All' || itemCategory === selectedCategory) {
+                    exercise.style.display = 'block';
+                    exists = true;
+                } else {
+                    exercise.style.display = 'none';
+                }
+            });
+
+            document.getElementById('noExerciseMessage').style.display = exists ? 'none' : 'block';
         }
     </script>
 </body>

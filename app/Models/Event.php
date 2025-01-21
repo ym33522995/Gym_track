@@ -5,15 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BodyWeight extends Model
+class Event extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'user_id',
-        'date',
-        'weight',
-    ];
 
     public function user()
     {

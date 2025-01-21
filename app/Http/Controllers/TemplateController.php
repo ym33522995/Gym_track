@@ -93,7 +93,12 @@ class TemplateController extends Controller
      */
     public function edit(string $id)
     {
-        // I think this fucntion is going to be used in the workout page when the user adds exercise
+        // 
+
+        $template = Template::with('templateContents.exercise')->findOrFail($id);
+        $newExercises = session()->get('new_exercises', []);
+        // dd($newExercises);
+        return view('gym_track.editTemplate')->with(['template' => $template, 'newExercises' => $newExercises]);
     }
 
     /**
@@ -102,6 +107,24 @@ class TemplateController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        // $template = Template::findOrFail($id);
+        // $currentOrder = TemplateContent::where('template_id', $template->id)->count();
+
+        // $newExercises = session()->get('new_exercises', []);
+        // foreach ($newExercises as $exercise) {
+        //     TemplateContent::create([
+        //         'template_id' => $template->id,
+        //         'exercise_id' => $exercise['exercise_id'],
+        //         'weight' => $exercise['weight'],
+        //         'rep' => $exercise['rep'],
+        //         'set' => $exercise['set'],
+        //         'order' => ++$currentOrder,
+        //     ]);
+        // }
+
+        session()->forget('new_exercises');
+
+        return redirect('/template');
     }
 
     /**
@@ -133,4 +156,54 @@ class TemplateController extends Controller
         return redirect('/template');
     }
 
-}
+    public function deleteExercise(Request $request, Template $template)
+    {
+        $exerciseId = $request->input('exercise_id');
+        $weight = $request->input('weight');
+        $rep = $request->input('rep');
+
+        $content = TemplateContent::where('template_id', $template->id)
+            ->where('exercise_id', $exerciseId)
+            ->where('weight', $weight)
+            ->where('rep', $rep)
+            ->first();
+
+        if ($content) {
+            if ($content->set > 1) {
+                $content->set -= 1;
+                $content->save();
+            } else {
+                $content->delete();
+            }
+
+            return response()->json(['success' => true, 'message' => 'Exercise updated successfully.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Exercise not found.']);
+    }
+
+    public function duplicateExercise(Request $request, Template $template)
+    {
+        $exerciseId = $request->input('exercise_id');
+        $weight = $request->input('weight');
+        $rep = $request->input('rep');
+
+        $content = TemplateContent::where('template_id', $template->id)
+            ->where('exercise_id', $exerciseId)
+            ->where('weight', $weight)
+            ->where('rep', $rep)
+            ->first();
+
+        if ($content) {
+            // Increment the set count
+            $content->set += 1;
+            $content->save();
+
+            return response()->json(['success' => true, 'message' => 'Exercise duplicated successfully.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Exercise not found.']);
+    }
+
+
+    }

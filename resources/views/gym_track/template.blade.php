@@ -95,6 +95,7 @@
                         <button type="button" onclick="deletePost({{ $template->id }})">delete</button>
                     </form>
                     <button type="button" onclick="editName({{ $template->id }}, '{{ $template->name }}')">Edit Name</button>
+                    <a href="template/edit/{{ $template->id }}">Edit Template</a>
                 </div>
             @endforeach
         </div>
@@ -136,6 +137,10 @@
             document.getElementById('template_id').value = templateId;
             document.getElementById('newName').value = currentName;
             document.getElementById('editNameModal').style.display = 'block';
+        }
+
+        function editTemplate() {
+            document.getElementById('template_id').value = templateId;
         }
 
         function closeModal() {
