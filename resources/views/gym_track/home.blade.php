@@ -17,81 +17,141 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        /* Styling for the header section */
-        .header-section {
-            text-align: left;
-            margin-bottom: 20px;
+        /* GLOBAL STYLES */
+        body {
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+            background-color: #FFFFFF;
+            color: #000000;
         }
 
+
         .page-title {
-            font-size: 24px; /* Make it bold and large */
+            font-size: 24px;
             font-weight: bold;
+            color: #000000;
         }
 
         .page-description {
             font-size: 16px;
             margin-top: 10px;
+            color: #000000;
         }
 
-        /* Maintain layout for the main content */
-        .container-main {
-            display: flex;
+        .btn-primary {
+            background-color: #52057B;
+            border-color: #52057B;
         }
 
-        .left-side {
-            width: 50%;
-            padding: 20px;
-        }
-
-        .right-side {
-            width: 50%;
-            padding: 20px;
-            border-left: 1px solid #ccc;
+        .btn-primary:hover {
+            background-color: #BC6FF1;
+            border-color: #BC6FF1;
         }
 
         .navigation-buttons {
             margin-top: 10px;
         }
+
+        .total-weights {
+            /* border: 1px solid #BC6FF1; */
+            padding: 10px;
+            margin-top: 20px;
+            color: #FFFFFF;
+            background-color: #892CDC;
+            border-radius: 8px;
+        }
+
+        /* Calendar styles */
+        #calendar {
+            background-color: #FFFFFF;
+            border: 1px solid #892CDC;
+            color: #000000;
+            border-radius: 8px;
+            padding: 10px;
+            height: auto;  /* CHANGE IT TO 100vh TO MAKE IT IN ONE SIGHT */
+            max-height: none;  /* CHANGE IT TO 420px TO MAKE IT IN ONE SIGHT */
+            /* overflow: auto;  This is IMPORTANT TO MAKE IT IN ONE SIGHT */
+        }
+
+        .fc-col-header-cell {
+            color: #000000 !important; /* Black font color for day names */
+            background-color: #FFFFFF; /* Black background */
+        }
+
+        .fc-daygrid-day {
+            background-color: #FFFFFF; /* Black day cells */
+            color: #000000; /* White text */
+        }
+
+        /* Toolbar for navigation buttons */
+        .fc-toolbar {
+            background-color: #FFFFFF; /* Black toolbar */
+            color: #000000; /* White text */
+        }
+
+        /* Chart styles */
+        #myWeightChart {
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            height: 50vh;
+            max-height: 250px;
+        }
+
+        .modal-content {
+            background-color: #52057B;
+            color: #FFFFFF;
+        }
+
+        .modal-header, .modal-footer {
+            border: none;
+        }
+
+        .modal-footer .btn-secondary {
+            background-color: #892CDC;
+            border-color: #892CDC;
+        }
+
+        .modal-footer .btn-secondary:hover {
+            background-color: #BC6FF1;
+            border-color: #BC6FF1;
+        }
+
+        /* @media (max-width: 768px) {
+            #calendar, #myWeightChart {
+                height: 100vh; 
+            }
+        } */
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/template">Template</a></li>
-                <li><a href="/exercise">Exercise</a></li>
-                <li><a href="/report">Report</a></li>
-                <li><a href="/profile">Profile</a></li>
-            </ul>
-        </nav>
-    </header>
-
+    <x-header />
     <main>
         <div class="header-section">
             <h2 class="page-title">Welcome to Your Home Page</h2>
             <p class="page-description">Below is your body weight chart. You can enter or update today's weight, or choose any date.</p>
         </div>
 
-        <div class="container-main">
-            <div class="left-side">
-                <div id='calendar'></div>
-            </div>
-
-            <div class="right-side">
-                <!-- Button to open modal -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#weightModal">
-                    Enter / Update Weight
-                </button>
-                <canvas id="myWeightChart" width="400" height="300"></canvas>
-                
-                <!-- Navigation Buttons for chart pagination -->
-                <div class="navigation-buttons">
-                    <button id="prevBtn" class="btn btn-secondary">&lt; Prev 2 Weeks</button>
-                    <button id="nextBtn" class="btn btn-secondary">Next 2 Weeks &gt;</button>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 left-side">
+                    <div id='calendar'></div>
                 </div>
-
-                <div class="total-weights"></div>
+                
+                <div class="col-md-6 right-side">
+                    <div class="total-weights"></div>
+                    <br>
+                    <!-- Button to open modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#weightModal">
+                        Enter / Update Weight
+                    </button>
+                    <canvas id="myWeightChart" width="400" height="300"></canvas>
+                    
+                    <!-- Navigation Buttons for chart pagination -->
+                    <div class="navigation-buttons">
+                        <button id="prevBtn" class="btn btn-secondary">&lt; Prev 2 Weeks</button>
+                        <button id="nextBtn" class="btn btn-secondary">Next 2 Weeks &gt;</button>
+                    </div>
+                </div>
             </div>
         </div>
     </main>

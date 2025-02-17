@@ -5,6 +5,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Home Page</title>
+    <style>
+        /* ====== Global Styles ====== */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+
+        /* ====== Header Navigation ====== */
+        header nav ul {
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+            display: flex;
+            gap: 15px;
+            background-color: #52057B;
+            border-bottom: 1px solid #892CDC;
+        }
+
+        header nav ul li a {
+            text-decoration: none;
+            color: #FFFFFF;
+        }
+
+        header nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* ====== Page Titles & Text ====== */
+        h2 {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        p {
+            text-align: left;
+            font-size: 18px;
+            color: #000000;
+        }
+
+        .search-filter-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-filter-container input {
+            padding: 8px;
+            width: 250px;
+            font-size: 14px;
+            border: 2px solid #892CDC;
+            border-radius: 5px;
+        }
+
+        /* Filter Buttons */
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .filter-buttons button {
+            background-color: #52057B;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+            align-items: center;
+        }
+
+        .filter-buttons button:hover {
+            background-color: #892CDC;
+            color: #000000;
+            transform: scale(1.05);
+        }
+
+        .reset-button {
+            background-color: black !important;
+        }
+
+        .reset-button:hover {
+            color: #FFFFFF !important;
+        }
+
+        /* Exercise Grid */
+        .exercise-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        /* Individual Exercise Box */
+        .exercise-box {
+            background-color: #FFFFFF;
+            color: #000000;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            border: 2px solid #52057B;
+        }
+
+        .exercise-box:hover {
+            transform: scale(1.05);
+            background-color: #892CDC;
+            color: #FFFFFF;
+        }
+
+        /* No Exercise Message */
+        #noExerciseMessage {
+            text-align: center;
+            color: red;
+            font-size: 16px;
+            display: none;
+            margin-top: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .search-filter-container {
+                width: 90%;
+            }
+            .exercise-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .exercise-container {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header Section -->
@@ -23,25 +170,32 @@
     <!-- Main Content Section -->
     <main>
         <h2>Exercise Page</h2>
-        <label for="searchExercise">Search Exercise:</label>
-        <input type="text" id="searchExercise" placeholder="Enter exercise name" oninput="searchExercises()">
-        <br><br>
+        <div class="search-filter-container">
+            <label for="searchExercise">Search Exercise:</label>
+            <input type="text" id="searchExercise" placeholder="Enter exercise name" oninput="searchExercises()">
+            <br><br>
 
-        <h3>Filter by Category</h3>
-        <button onclick="filterByCategory('Chest')">Chest</button>
-        <button onclick="filterByCategory('Back')">Back</button>
-        <button onclick="filterByCategory('Leg')">Leg</button>
-        <button onclick="filterByCategory('Shoulder')">Shoulder</button>
-        <button onclick="filterByCategory('Biceps')">Biceps</button>
-        <button onclick="filterByCategory('Triceps')">Triceps</button>
-        <button onclick="filterByCategory('Abs')">Abs</button>
-        <button onclick="filterByCategory('Forearm')">Forearm</button>
-        <button onclick="filterByCategory('Full body')">Full body</button>
+            <h3>Filter by Category</h3>
+            <div class="filter-buttons">
+                <button type="button" onclick="filterByCategory('Chest')">Chest</button>
+                <button type="button" onclick="filterByCategory('Back')">Back</button>
+                <button type="button" onclick="filterByCategory('Leg')">Leg</button>
+                <button type="button" onclick="filterByCategory('Shoulder')">Shoulder</button>
+                <button type="button" onclick="filterByCategory('Biceps')">Biceps</button>
+                <button type="button" onclick="filterByCategory('Triceps')">Triceps</button>
+                <button type="button" onclick="filterByCategory('Abs')">Abs</button>
+                <button type="button" onclick="filterByCategory('Forearm')">Forearm</button>
+                <button type="button" onclick="filterByCategory('Full body')">Full body</button>
+                <button type="button" class="reset-button" onclick="resetFilters()">Reset Filters</button>
+            </div>
+        </div>
 
         <p>These are the exercises:</p>
-        <div id="exerciseList">
+        <div id="exerciseList" class="exercise-container">
             @foreach($exercises as $exercise)
-                <div class="exercise-item" data-category="{{ $exercise->category->name }}">{{ $exercise->name }}</div>
+                <div class="exercise-box">
+                    <div class="exercise-item" data-category="{{ $exercise->category->name }}">{{ $exercise->name }}</div>
+                </div>
             @endforeach
         </div>
 
@@ -51,39 +205,53 @@
     <script>
         function searchExercises() {
             const searchInput = document.getElementById('searchExercise').value.toLowerCase();
-            const exercises = document.querySelectorAll('.exercise-item');
+            const exerciseBoxes = document.querySelectorAll('.exercise-box'); // Select the whole box
             let hasMatch = false;
 
-            exercises.forEach(exercise => {
-                const exerciseName = exercise.textContent.toLowerCase();
+            exerciseBoxes.forEach(box => {
+                const exerciseItem = box.querySelector('.exercise-item'); // Get the name inside the box
+                const exerciseName = exerciseItem.textContent.toLowerCase();
+
                 if (exerciseName.includes(searchInput)) {
-                    exercise.style.display = 'block';
+                    box.style.display = 'block'; // Show the entire box
                     hasMatch = true;
                 } else {
-                    exercise.style.display = 'none';
+                    box.style.display = 'none'; // Hide the box completely
                 }
             });
 
             document.getElementById('noExerciseMessage').style.display = hasMatch ? 'none' : 'block';
         }
 
-
         function filterByCategory(selectedCategory) {
-            const exercises = document.querySelectorAll('.exercise-item');
+            const exerciseBoxes = document.querySelectorAll('.exercise-box'); // Select the whole box
             let exists = false;
 
-            exercises.forEach(exercise => {
-                const itemCategory = exercise.getAttribute('data-category');
+            exerciseBoxes.forEach(box => {
+                const exerciseItem = box.querySelector('.exercise-item'); // Get the name inside the box
+                const itemCategory = exerciseItem.getAttribute('data-category');
+
                 if (selectedCategory === 'All' || itemCategory === selectedCategory) {
-                    exercise.style.display = 'block';
+                    box.style.display = 'block'; // Show the entire box
                     exists = true;
                 } else {
-                    exercise.style.display = 'none';
+                    box.style.display = 'none'; // Hide the box completely
                 }
             });
 
             document.getElementById('noExerciseMessage').style.display = exists ? 'none' : 'block';
         }
+
+        function resetFilters() {
+            const exerciseBoxes = document.querySelectorAll('.exercise-box');
+            exerciseBoxes.forEach(box => {
+                box.style.display = 'block'; // Show all boxes again
+            });
+
+            document.getElementById('noExerciseMessage').style.display = 'none';
+            document.getElementById('searchExercise').value = ''; // Clear search input
+        }
+
     </script>
 </body>
 </html>

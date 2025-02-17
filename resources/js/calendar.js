@@ -28,7 +28,8 @@ if (calendarEl) {
                 dayCellDidMount: function (info) {
                     const date = new Date(info.date.getTime() + 9 * 60 * 60 * 1000).toISOString().split("T")[0]
                     if (recordDates.includes(date)) {
-                        info.el.style.backgroundColor = "#52be80";
+                        info.el.style.backgroundColor = "#52057B"; //#52be80
+                        info.el.style.color = "#FFFFFF";
                     }
                 }
             });

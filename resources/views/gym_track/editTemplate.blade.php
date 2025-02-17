@@ -4,6 +4,132 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Template Page</title>
+    <style> 
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #FFFFFF; 
+            color: #000000; 
+        }
+
+        /* Header Navigation */
+        header {
+            background-color: #52057B;
+            padding: 10px;
+            text-align: center;
+        }
+
+        header ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 15px;
+            justify-content: left;
+        }
+
+        header ul li a {
+            text-decoration: none;
+            color: #FFFFFF;
+            font-weight: bold;
+            padding: 10px;
+        }
+
+        header ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* Styling for unit-exercise */
+        .unit-exercise {
+            border: 2px solid #52057B; /* Border added as per request */
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        /* Updated button styles inside unit-exercise */
+        .unit-exercise button {
+            background-color: #892CDC; /* Button color as requested */
+            color: white;
+            border: none;
+            padding: 12px 18px; /* Adjusted button size */
+            font-size: 16px; /* Large enough font */
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .unit-exercise button:hover {
+            background-color: #52057B; /* Slightly darker shade on hover */
+        }
+
+        /* Optional: Add spacing for better layout */
+        .unit-exercise label {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        /* ===== Added new div styling for better sectioning ===== */
+        .section-container {
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        /* ===== End of new div styling ===== */
+
+        /* Button container to align buttons centrally */
+        .button-container {
+            display: flex;
+            justify-content: center; /* Centers the buttons horizontally */
+            gap: 20px; /* Adds spacing between the buttons */
+            margin-top: 20px;
+        }
+
+        /* Styling for Add Exercise Button */
+        .add-exercise-btn {
+            display: inline-block;
+            background-color: #892CDC;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            min-width: 180px; /* Ensures a consistent size */
+        }
+
+        .add-exercise-btn:hover {
+            background-color: #52057B;
+        }
+
+        /* Styling for Done Editing Button */
+        .done-editing-btn {
+            display: inline-block;
+            background-color: #52057B;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            min-width: 180px;
+        }
+
+        .done-editing-btn:hover {
+            background-color: #892CDC;
+        }
+
+
+
+    </style>
 </head>
 <body>
     <!-- Header Section -->
@@ -32,7 +158,7 @@
                     <div data-exercise-id="{{ $content->exercise_id }}">
                         <strong id="delete-when-zero">{{ $content->exercise->name }}</strong>
                         @for ($i = 1; $i <= $content->set; $i++)
-                            <div>
+                            <div class="unit-exercise">
                                 <label>Set {{ $i }} - Weight:</label>
                                 <input type="number" name="exercises[{{ $content->exercise_id }}][sets][{{ $i }}][weight]" value="{{ $content->weight }}">
                                 <label>Reps:</label>
@@ -64,8 +190,10 @@
                         </div>
                     @endforeach
                 @endif
-                <a href="/workout/{{ $template->id }}/addExercise?from=editTemplate">+ (Add Exercise)</a>
-                <button type="submit">Done Editing</button>
+                <div class="button-container">
+                    <a href="/workout/{{ $template->id }}/addExercise?from=editTemplate" class="add-exercise-btn">+ (Add Exercise)</a>
+                    <button type="submit" class="done-editing-btn">Done Editing</button>
+                </div>
             </form>
         </div>
 

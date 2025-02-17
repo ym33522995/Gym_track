@@ -18,7 +18,13 @@ class TemplateController extends Controller
     public function index(Template $template)
     {
         //
-        return view('gym_track.template')->with(['templates' => $template->get()]);
+        $userId = auth()->id(); 
+
+        $templates = Template::where('user_id', $userId)->get();
+
+        return view('gym_track.template')->with([
+            'templates' => $templates
+        ]);
     }
 
     /**
@@ -37,18 +43,30 @@ class TemplateController extends Controller
     {
         $validate = $request->validate([
             'template_name' => 'required|string|max:255',
-            'exercises' => 'required|array',
-            // 'exercises.*.selected' => 'required|boolean',
-            // 'exercises.*.weight' => 'required_if:exercises.*.selected,1|numeric',
-            // 'exercises.*.rep' => 'required_if:exercises.*.selected,1|integer',
-            // 'exercises.*.set' => 'required_if:exercises.*.selected,1|integer',
+            'exercises' => 'sometimes|required|array',
         ]);
+
+        $hasSelectedExercise = false;
+        if ($request->has('exercises')) {
+            foreach ($request->input('exercises') as $exerciseSets) {
+                foreach ($exerciseSets as $exercise) {
+                    if (isset($exercise['selected']) && $exercise['selected'] == 1) {
+                        $hasSelectedExercise = true;
+                        break 2; 
+                    }
+                }
+            }
+        }
+
+        if ($hasSelectedExercise == false) {
+            return redirect()->back()->withErrors(['exercises' => "You can't create an empty template."]);
+        }
 
         $userId = Auth::id();
         if (!$userId) {
             return redirect('/login');
         }
-    
+
         $input = [
             'name' => $request->input('template_name'),
             'user_id' => $userId,
@@ -57,21 +75,24 @@ class TemplateController extends Controller
         $template->fill($input)->save();
 
         $order = 0;
-        foreach ($validate['exercises'] as $exerciseId => $exercise) {
-            if (isset($exercise['selected'])) {
-                TemplateContent::create([
-                    'template_id' => $template->id,
-                    'exercise_id' => $exerciseId,
-                    'weight' => $exercise['weight'],
-                    'rep' => $exercise['rep'],
-                    'set' => $exercise['set'],
-                    'order' => $order++,
-                ]);
+        foreach ($validate['exercises'] as $exerciseId => $exerciseSets) {
+            foreach ($exerciseSets as $index => $exercise) {
+                if (isset($exercise['selected'])) {
+                    TemplateContent::create([
+                        'template_id' => $template->id,
+                        'exercise_id' => $exerciseId,
+                        'weight' => $exercise['weight'] ?? null,
+                        'rep' => $exercise['rep'] ?? null,
+                        'set' => $exercise['set'] ?? null,
+                        'order' => $order++,
+                    ]);
+                }
             }
         }
 
         return redirect('/template/' . $template->id);
     }
+
 
 
     public function delete(Template $template) {
@@ -107,22 +128,23 @@ class TemplateController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        // $template = Template::findOrFail($id);
-        // $currentOrder = TemplateContent::where('template_id', $template->id)->count();
+        $template = Template::findOrFail($id);
+        $currentOrder = TemplateContent::where('template_id', $template->id)->count();
 
-        // $newExercises = session()->get('new_exercises', []);
-        // foreach ($newExercises as $exercise) {
-        //     TemplateContent::create([
-        //         'template_id' => $template->id,
-        //         'exercise_id' => $exercise['exercise_id'],
-        //         'weight' => $exercise['weight'],
-        //         'rep' => $exercise['rep'],
-        //         'set' => $exercise['set'],
-        //         'order' => ++$currentOrder,
-        //     ]);
-        // }
+        $newExercises = session()->get('new_exercises', []);
+        foreach ($newExercises as $exercise) {
+            TemplateContent::create([
+                'template_id' => $template->id,
+                'exercise_id' => $exercise['exercise_id'],
+                'weight' => $exercise['weight'],
+                'rep' => $exercise['rep'],
+                'set' => $exercise['set'],
+                'order' => ++$currentOrder,
+            ]);
+        }
 
         session()->forget('new_exercises');
+        session()->forget('workout_temp_data');
 
         return redirect('/template');
     }
@@ -139,6 +161,7 @@ class TemplateController extends Controller
     {
         session()->forget('new_exercises');
         session()->forget('workout_state');
+        session()->forget('workout_temp_data');
         // session()->forget('return_url');
         return redirect('/template');
     }
@@ -203,6 +226,17 @@ class TemplateController extends Controller
         }
 
         return response()->json(['success' => false, 'message' => 'Exercise not found.']);
+    }
+
+    public function saveCurrentRecord(Request $request, Template $template) 
+    {
+        session()->forget('new_exercises');
+        $json = $request->input('record_state', '{}');
+        $records = json_decode($json, true);
+
+        session(['workout_temp_data' => $records]);
+
+        return redirect("/workout/{$template->id}/addExercise?from=workout");
     }
 
 

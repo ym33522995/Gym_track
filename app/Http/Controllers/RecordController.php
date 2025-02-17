@@ -10,6 +10,10 @@ use App\Models\TemporaryRecord;
 use App\Models\TemplateContent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use GeminiAPI\Client;
+use Illuminate\Support\Facades\Session;
+
+
 
 class RecordController extends Controller
 {
@@ -24,9 +28,11 @@ class RecordController extends Controller
             return redirect('/login');
         }
 
-        // dd($newExercises);
         $newExercises = session()->get('new_exercises', []);
         $temporaryRecords = TemporaryRecord::where('user_id', $userId)->get();
+        // dd($newExercises);
+
+        $state = session()->get('workout_temp_data', []);
 
         if ($temporaryRecords->isEmpty()) {
             foreach ($template->templateContents as $content) {
@@ -42,7 +48,7 @@ class RecordController extends Controller
             $temporaryRecords = TemporaryRecord::where('user_id', $userId)->get();
         }
 
-        return view('gym_track.workout')->with(['template' => $template, 'newExercises' => $newExercises, 'temporaryRecords' => $temporaryRecords]);
+        return view('gym_track.workout')->with(['template' => $template, 'newExercises' => $newExercises, 'temporaryRecords' => $temporaryRecords, 'state' => $state]);
     }
 
     /**
@@ -59,6 +65,19 @@ class RecordController extends Controller
     public function store(Request $request)
     {
         //
+        // dd($request->all());
+        $validate = $request->validate([
+            'records' => ['required', 'array', function ($attribute, $value, $fail) {
+                $hasCompletedExercise = collect($value)->flatten(1)
+                    ->contains(fn($set) => isset($set['completed']) && $set['completed'] == "1");
+        
+                if (!$hasCompletedExercise) {
+                    $fail("At least one exercise must be marked as completed. Click 'Quit Exercise' if you want to exit.");
+                }
+            }],
+        ]);
+        
+
         $userId = Auth::id();
         if (!$userId) {
             return redirect('/login');
@@ -80,6 +99,7 @@ class RecordController extends Controller
                         'exercise_id' => $exerciseId,
                         'weight' => $set['weight'],
                         'rep' => $set['rep'],
+                        'notes' => $set['notes'] ?? null,
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);
@@ -87,6 +107,8 @@ class RecordController extends Controller
             }
         }
 
+        session()->forget('new_exercises');
+        session()->forget('workout_temp_data');
         return redirect('/report');
     }
 
@@ -133,53 +155,113 @@ class RecordController extends Controller
         return view('gym_track.addExercise')->with(['exercises' => $exercise->get(), 'template' => $template, 'from' => $from]);
     }
 
+    // public function saveExercise(Request $request, Template $template)
+    // {
+    //     $newExercises = $request->input('exercises',[]);
+    //     $formattedExercises = [];
+
+    //     foreach ($newExercises as $exerciseId => $data) {
+    //         if (isset($data['selected']) && $data['selected'] == 1) {
+    //             $exercise = Exercise::find($exerciseId);
+    //             $formattedExercises[$exerciseId] = [
+    //                 'exercise_id' => $exerciseId,
+    //                 'name' => $exercise->name,
+    //                 'weight' => $data['weight'],
+    //                 'rep' => $data['rep'],
+    //                 'set' => $data['set'],
+    //                 'notes' => $data['notes'] ?? null,
+    //             ];
+    //         }
+    //     }
+
+    //     $template = Template::findOrFail($template->id);
+    //     $currentOrder = (TemplateContent::where('template_id', $template->id)->count())+1;
+        
+    //     $newExercises = session()->get('new_exercises', []);
+    //     foreach ($newExercises as $exercise) {
+    //         TemplateContent::create([
+    //             'template_id' => $template->id,
+    //             'exercise_id' => $exercise['exercise_id'],
+    //             'weight' => $exercise['weight'],
+    //             'rep' => $exercise['rep'],
+    //             'set' => $exercise['set'],
+    //             'order' => ++$currentOrder,
+    //         ]);
+    //     }
+
+    //     // session()->forget('new_exercises');
+
+    //     // dd($newExercises);
+
+    //     $existingExercises = session()->get('new_exercises', []);
+    //     $mergedExercises = array_merge($existingExercises, $formattedExercises);
+
+    //     // dd($mergedExercises);
+    //     session()->put('new_exercises', $mergedExercises);
+    //     $from = $request->input('from', 'workout');
+    //     if ($from === 'editTemplate') {
+    //         return redirect("/template/edit/{$template->id}");
+    //     }
+
+    //     return redirect("/template/{$template->id }");
+    // }
+
     public function saveExercise(Request $request, Template $template)
     {
-        $newExercises = $request->input('exercises');
+
+        $newExercises = $request->input('exercises', []);
         $formattedExercises = [];
 
         foreach ($newExercises as $exerciseId => $data) {
-            if (isset($data['selected']) && $data['selected'] == 1) {
-                $exercise = Exercise::find($exerciseId);
+            if (!empty($data['selected'])) {
+                $exercise = Exercise::findOrFail($exerciseId);
                 $formattedExercises[$exerciseId] = [
                     'exercise_id' => $exerciseId,
-                    'name' => $exercise->name,
-                    'weight' => $data['weight'],
-                    'rep' => $data['rep'],
-                    'set' => $data['set'],
+                    'name'        => $exercise->name,
+                    'weight'      => $data['weight'],
+                    'rep'         => $data['rep'],
+                    'set'         => $data['set'],
+                    'notes'       => $data['notes'] ?? null,
                 ];
             }
         }
 
+        // dd($formattedExercises);
+
         $template = Template::findOrFail($template->id);
-        $currentOrder = (TemplateContent::where('template_id', $template->id)->count())+1;
-        
-        $newExercises = session()->get('new_exercises', []);
-        foreach ($newExercises as $exercise) {
+        $currentOrder = TemplateContent::where('template_id', $template->id)->count() + 1;
+
+        foreach ($formattedExercises as $exerciseData) {
             TemplateContent::create([
                 'template_id' => $template->id,
-                'exercise_id' => $exercise['exercise_id'],
-                'weight' => $exercise['weight'],
-                'rep' => $exercise['rep'],
-                'set' => $exercise['set'],
-                'order' => ++$currentOrder,
+                'exercise_id' => $exerciseData['exercise_id'],
+                'weight'      => $exerciseData['weight'],
+                'rep'         => $exerciseData['rep'],
+                'set'         => $exerciseData['set'],
+                'order'       => $currentOrder++,
             ]);
         }
 
-        // dd($newExercises);
+        
+        $oldSessionExercises = session()->get('new_exercises', []);
 
-        $existingExercises = session()->get('new_exercises', []);
-        $mergedExercises = array_merge($existingExercises, $formattedExercises);
+        foreach ($formattedExercises as $exerciseId => $exerciseData) {
+            if (isset($oldSessionExercises[$exerciseId])) {
+                // $oldSessionExercises[$exerciseId] = $exerciseData;
+                unset($oldSession[$exerciseId]);
+            }
+        }
 
-        // dd($mergedExercises);
-        session()->put('new_exercises', $mergedExercises);
+        session()->put('new_exercises', $oldSessionExercises);
+
         $from = $request->input('from', 'workout');
         if ($from === 'editTemplate') {
             return redirect("/template/edit/{$template->id}");
         }
 
-        return redirect("/template/{$template->id }");
+        return redirect("/template/{$template->id}");
     }
+
 
 
     public function totalWeights()
@@ -200,6 +282,10 @@ class RecordController extends Controller
             });
         
         return $totalWeight;
+    }
+
+    function convertTotalWeight() {
+        
     }
 
 
@@ -237,54 +323,44 @@ class RecordController extends Controller
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    public function saveTemporaryRecord(Request $request, Template $template)
+    public function saveTimer(Request $request)
     {
-        $userId = Auth::id();
-        if (!$userId) {
-            return redirect('/login');
+        $elapsedTime = $request->input('elapsed_time', 0);
+        $isReset = $request->input('reset') === 'true';
+
+        \Log::info("saveTimer received elapsed time: $elapsedTime | Reset: " . ($isReset ? 'Yes' : 'No') . " | Session Before: " . json_encode(session()->all()));
+
+        if ($isReset) {
+            // Clear timer session completely
+            session()->forget('workout_timer');
+            session()->save();
+            \Log::info("Timer reset successfully. | Session After Reset: " . json_encode(session()->all()));
+            return response()->json(['success' => true, 'elapsed_time' => 0]);
         }
 
-        foreach ($request->input('records', []) as $exerciseId => $sets) {
-            foreach ($sets as $setIndex => $set) {
-                TemporaryRecord::updateOrCreate(
-                    [
-                        'user_id' => $userId,
-                        'exercise_id' => $exerciseId,
-                        'set' => $setIndex,
-                        'weight' => $set['weight'] ?? null,
-                        'rep' => 1,
-                        'notes' => $set['notes'] ?? null,
-                    ]
-                );
-            }
+        // Only update if reset was NOT requested
+        if (session()->has('workout_timer')) {
+            session()->put('workout_timer', $elapsedTime);
+            session()->save();
+            \Log::info("Session updated with elapsed time: $elapsedTime | Session After Update: " . json_encode(session()->all()));
+        } else {
+            \Log::warning("Attempted to update timer after reset, ignoring.");
         }
 
-        return redirect("/workout/{$template->id}/addExercise");
+        return response()->json(['success' => true, 'elapsed_time' => $elapsedTime]);
     }
 
 
-
-
-
-    public function clearTemporaryRecords()
+    public function getTimer()
     {
-        $userId = Auth::id();
-        if ($userId) {
-            TemporaryRecord::where('user_id', $userId)->delete();
-        }
+        // Ensure session value is properly retrieved
+        $elapsedTime = session()->get('workout_timer', 0);
+
+        \Log::info("getTimer returning elapsed time: $elapsedTime | Session Data: " . json_encode(session()->all()));
+        
+        return response()->json(['elapsed_time' => $elapsedTime]);
     }
+
 
 
 }

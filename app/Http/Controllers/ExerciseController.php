@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Exercise;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ExerciseController extends Controller
 {
@@ -73,4 +75,25 @@ class ExerciseController extends Controller
     {
         //
     }
+
+    public function getAllExercises()
+    {
+        // Fetch exercises along with their category names
+        $exercises = DB::table('exercises')
+            ->join('categories', 'exercises.category_id', '=', 'categories.id')
+            ->select('exercises.id', 'exercises.name as exercise_name', 'categories.name as category_name')
+            ->get();
+
+        Log::info('Fetched all exercises:', [
+            'success' => true,
+            'exercises' => $exercises,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'exercises' => $exercises,
+        ]);
+    }
+
+
 }
