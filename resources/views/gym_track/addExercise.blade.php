@@ -7,22 +7,34 @@
     <style>
         /* Matched styling with createTemplate.blade */
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            font-family: Arial, sans-serif;
             background-color: #FFFFFF;
             color: #000000;
         }
 
-        /* Navigation */
+        header {
+            background-color: #52057B;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 20px;
+            color: #FFFFFF;
+        }
+
+        /* Style navigation links */
         header nav ul {
             list-style: none;
-            padding: 10px;
+            padding: 0;
             margin: 0;
             display: flex;
-            gap: 15px;
-            background-color: #52057B;
-            border-bottom: 1px solid #892CDC;
+            gap: 20px;
+            font-weight: bold;
         }
 
         header nav ul li a {
@@ -32,6 +44,13 @@
 
         header nav ul li a:hover {
             text-decoration: underline;
+        }
+
+        .app-logo {
+            height: 80%; /* Scale dynamically based on the header height */
+            max-height: 50px; /* Prevent it from becoming too large */
+            width: auto; /* Maintain aspect ratio */
+            margin-right: 10px;
         }
 
         /* Search and Filter Styling */
@@ -227,6 +246,7 @@
 </head>
 <body>
     <header>
+        <img src="{{ asset('app_logoT.png') }}" alt="App Logo" class="app-logo">
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>

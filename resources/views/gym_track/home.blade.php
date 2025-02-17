@@ -20,9 +20,49 @@
         /* GLOBAL STYLES */
         body {
             margin: 0;
-            font-family: 'Nunito', sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #FFFFFF;
             color: #000000;
+        }
+
+        header {
+            background-color: #52057B;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 20px;
+            color: #FFFFFF;
+        }
+
+        /* Style navigation links */
+        header nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 20px;
+            font-weight: bold;
+        }
+
+        header nav ul li a {
+            text-decoration: none;
+            color: #FFFFFF;
+        }
+
+        header nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .app-logo {
+            height: 80%; /* Scale dynamically based on the header height */
+            max-height: 50px; /* Prevent it from becoming too large */
+            width: auto; /* Maintain aspect ratio */
+            margin-right: 10px;
         }
 
 
@@ -30,12 +70,14 @@
             font-size: 24px;
             font-weight: bold;
             color: #000000;
+            padding-top: 10px;
         }
 
         .page-description {
             font-size: 16px;
             margin-top: 10px;
             color: #000000;
+            padding-bottom: 10px;
         }
 
         .btn-primary {
@@ -124,11 +166,22 @@
     </style>
 </head>
 <body>
-    <x-header />
+    <header>
+    <img src="{{ asset('app_logoT.png') }}" alt="App Logo" class="app-logo">
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/template">Template</a></li>
+                <li><a href="/exercise">Exercise</a></li>
+                <li><a href="/report">Report</a></li>
+                <li><a href="/profile">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
     <main>
         <div class="header-section">
             <h2 class="page-title">Welcome to Your Home Page</h2>
-            <p class="page-description">Below is your body weight chart. You can enter or update today's weight, or choose any date.</p>
+            <p class="page-description">Below is the calendar and the body weight chart. You can enter or update today's weight, or choose any date.</p>
         </div>
 
         <div class="container-fluid">
