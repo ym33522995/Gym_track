@@ -122,7 +122,9 @@
 </head>
 <body>
     <header>
-        <img src="{{ asset('app_logoT.png') }}" alt="App Logo" class="app-logo">
+        <a href="/">
+            <img src="{{ asset('app_logoT.png') }}" alt="App Logo" class="app-logo">
+        </a>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>

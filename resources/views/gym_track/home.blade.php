@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" name="csrf-token" content="{{ csrf_token() }}">
     <title>Home Page</title>
 
     <!-- Bootstrap 5 CSS (for the modal) -->
@@ -94,7 +94,7 @@
             margin-top: 10px;
         }
 
-        .total-weights {
+        .total-weights-container {
             /* border: 1px solid #BC6FF1; */
             padding: 10px;
             margin-top: 20px;
@@ -158,6 +158,10 @@
             border-color: #BC6FF1;
         }
 
+        .form-text {
+            color: #FFFFFF;
+        }
+
         /* @media (max-width: 768px) {
             #calendar, #myWeightChart {
                 height: 100vh; 
@@ -167,7 +171,9 @@
 </head>
 <body>
     <header>
-    <img src="{{ asset('app_logoT.png') }}" alt="App Logo" class="app-logo">
+        <a href="/">
+            <img src="{{ asset('app_logoT.png') }}" alt="App Logo" class="app-logo">
+        </a>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
@@ -191,7 +197,10 @@
                 </div>
                 
                 <div class="col-md-6 right-side">
-                    <div class="total-weights"></div>
+                    <div class="total-weights-container">
+                        <div class="total-weights"></div>
+                        <div id="gemini-response"></div>
+                    </div>
                     <br>
                     <!-- Button to open modal -->
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#weightModal">
@@ -274,18 +283,18 @@
             });
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            axios.get('/total-weight')
-                .then(response => {
-                    const totalWeight = response.data;
-                    const totalWeightDiv = document.querySelector(".total-weights");
-                    totalWeightDiv.innerHTML = `<p>Here is the total weight you have lifted so far: <strong>${totalWeight} kg</strong></p>`;
-                })
-                .catch(error => {
-                    console.error('Error fetching total weight:', error);
-                    document.getElementById('totalWeight').textContent = 'Error loading total weight.';
-                });
-        });
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     axios.get('/total-weight')
+        //         .then(response => {
+        //             const totalWeight = response.data;
+        //             const totalWeightDiv = document.querySelector(".total-weights");
+        //             totalWeightDiv.innerHTML = `<p>Here is the total weight you have lifted so far: <strong>${totalWeight} kg</strong></p>`;
+        //         })
+        //         .catch(error => {
+        //             console.error('Error fetching total weight:', error);
+        //             document.getElementById('totalWeight').textContent = 'Error loading total weight.';
+        //         });
+        // });
 
         // AJAX to store the new weight & date
         function saveWeight() {
@@ -420,6 +429,62 @@
 
             fetchChartData();
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            axios.get('/total-weight')
+            .then(response => {
+                const totalWeight = response.data;
+                const totalWeightDiv = document.querySelector(".total-weights");
+                totalWeightDiv.innerHTML = `<p>Here is the total weight you have lifted so far: <strong>${totalWeight} kg</strong></p>`;
+
+                setTimeout(() => {
+                    getGeminiEquivalent(totalWeight);
+                }, 500);
+            })
+            .catch(error => {
+                console.error('Error fetching total weight:', error);
+                document.getElementById('totalWeight').textContent = 'Error loading total weight.';
+            });
+        });
+
+
+        async function getGeminiEquivalent(totalWeight) {
+            totalWeight = totalWeight ?? 0;
+            try {
+                const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+                if (!csrfTokenElement) {
+                    throw new Error("CSRF token meta tag not found.");
+                }
+
+                const csrfToken = csrfTokenElement.getAttribute('content');
+                const response = await axios.post('/gemini-api', { weight: totalWeight }, {
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken }
+                });
+
+                console.log("Gemini API Response:", response.data);
+
+                // Get the display element
+                const geminiResponseElement = document.getElementById('gemini-response');
+                if (!geminiResponseElement) {
+                    console.error("Error: No element with ID 'gemini-response' found.");
+                    return;
+                }
+
+                // Check for valid API response
+                if (!response.data || !response.data.response) {
+                    geminiResponseElement.innerHTML = "Error getting equivalent.";
+                } else {
+                    geminiResponseElement.innerHTML = response.data.response;
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                const geminiResponseElement = document.getElementById('gemini-response');
+                if (geminiResponseElement) {
+                    geminiResponseElement.innerHTML = "Error getting equivalent.";
+                }
+            }
+        }
+
     </script>
 </body>
 </html>

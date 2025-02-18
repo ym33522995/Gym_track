@@ -213,7 +213,7 @@
     
         .timer-box {
             position: absolute;
-            top: 60px;
+            top: 65px;
             right: 20px;
             z-index: 1000;
             color: black;
@@ -355,7 +355,9 @@
 </head>
 <body>
     <header>
-        <img src="{{ asset('app_logoT.png') }}" alt="App Logo" class="app-logo">
+        <a href="/">
+            <img src="{{ asset('app_logoT.png') }}" alt="App Logo" class="app-logo">
+        </a>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
