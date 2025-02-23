@@ -118,6 +118,23 @@
             flex: 1;            
             padding-left: 20px;
         }
+
+        .exercise-records {
+            max-height: 400px; /* Adjust height as needed */
+            overflow-y: auto; /* Enables vertical scrolling */
+            border: 2px solid #ddd; /* Optional: Add a border for clarity */
+            padding: 10px;
+            background-color: #f9f9f9; /* Optional: Background color */
+            border-radius: 5px; /* Optional: Rounded corners */
+        }
+
+        .option-text {
+            color: #52057B; /* Deep purple from your theme */
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+
     </style>
 </head>
 <body>
@@ -132,6 +149,7 @@
                 <li><a href="/exercise">Exercise</a></li>
                 <li><a href="/report">Report</a></li>
                 <li><a href="/profile">Profile</a></li>
+                <li><a href="/how-to">How To</a></li>
             </ul>
         </nav>
     </header>
@@ -155,7 +173,7 @@
             <section class="right-side">
                 <h2>Records by Exercise</h2>
                 <div>
-                    <label for="exerciseDropdown">Select Exercise:</label>
+                    <label for="exerciseDropdown" class="option-text">Select Exercise:</label>
                     <select id="exerciseDropdown" onchange="loadRecordsByExercise()">
                         <option value="">-- Select Exercise --</option>
                     </select>

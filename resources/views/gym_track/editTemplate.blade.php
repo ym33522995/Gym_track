@@ -156,6 +156,7 @@
                 <li><a href="/exercise">Exercise</a></li>
                 <li><a href="/report">Report</a></li>
                 <li><a href="/profile">Profile</a></li>
+                <li><a href="/how-to">How To</a></li>
             </ul>
         </nav>
     </header>

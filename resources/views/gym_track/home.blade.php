@@ -77,7 +77,6 @@
             font-size: 16px;
             margin-top: 10px;
             color: #000000;
-            padding-bottom: 10px;
         }
 
         .btn-primary {
@@ -167,6 +166,11 @@
                 height: 100vh; 
             }
         } */
+
+        .how-to-guide {
+            color: red;
+            padding-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -181,6 +185,7 @@
                 <li><a href="/exercise">Exercise</a></li>
                 <li><a href="/report">Report</a></li>
                 <li><a href="/profile">Profile</a></li>
+                <li><a href="/how-to">How To</a></li>
             </ul>
         </nav>
     </header>
@@ -188,6 +193,7 @@
         <div class="header-section">
             <h2 class="page-title">Welcome to Your Home Page</h2>
             <p class="page-description">Below is the calendar and the body weight chart. You can enter or update today's weight, or choose any date.</p>
+            <p class="how-to-guide">Go to "How To" in the header to see how to use the app</p>
         </div>
 
         <div class="container-fluid">
@@ -450,6 +456,9 @@
 
         async function getGeminiEquivalent(totalWeight) {
             totalWeight = totalWeight ?? 0;
+            const geminiResponseElement = document.getElementById('gemini-response');
+            geminiResponseElement.innerHTML = "Waiting for Gemini to respond...";
+            
             try {
                 const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
                 if (!csrfTokenElement) {
@@ -464,7 +473,8 @@
                 console.log("Gemini API Response:", response.data);
 
                 // Get the display element
-                const geminiResponseElement = document.getElementById('gemini-response');
+                // const geminiResponseElement = document.getElementById('gemini-response');
+                // geminiResponseElement.innerHTML = "Waiting for Gemini to respond...";
                 if (!geminiResponseElement) {
                     console.error("Error: No element with ID 'gemini-response' found.");
                     return;

@@ -96,7 +96,7 @@ class RecordExerciseController extends Controller
         }
 
         // Get the date 6 months ago
-        $sixMonthsAgo = now()->subMonths(6);
+        $sixMonthsAgo = now()->subMonths(12);
 
         // Fetch records for the selected exercise within the last 6 months
         $records = DB::table('record_exercises')

@@ -9,6 +9,7 @@ use App\Http\Controllers\BodyWeightController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\RecordExerciseController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\HowToController;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,6 +82,7 @@ Route::get('/workout/clearTemporaryRecords', [RecordController::class, 'clearTem
 
 Route::post('/record/saveTemporary/{template}', [RecordController::class, 'saveTemporaryRecord']);
 
+Route::get('how-to', [HowToController::class, 'index']);
 
 
 

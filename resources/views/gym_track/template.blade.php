@@ -320,6 +320,7 @@
                 <li><a href="/exercise">Exercise</a></li>
                 <li><a href="/report">Report</a></li>
                 <li><a href="/profile">Profile</a></li>
+                <li><a href="/how-to">How To</a></li>
             </ul>
         </nav>
     </header>
@@ -327,7 +328,7 @@
     <!-- Main Content Section -->
     <main>
         <h2>Template Page</h2>
-        <p>Please select your template.</p>
+        <p>Please select your template. Click on the + button to create a new template.</p>
         <div class="template-wrapper">
             <button id="scrollLeft" class="scroll-button scroll-button-left">&lt;</button>
             <div class="template-container" id="template-container">
