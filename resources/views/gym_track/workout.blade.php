@@ -394,12 +394,12 @@
 
             <form action="/record/store" method="POST" id="workoutForm">
                 @csrf
-                @foreach ($template->templateContents as $content)
+                @foreach ($template->templateContents as $contentIndex => $content)
                     @php 
-                        $exerciseId = $content->exercise->id; 
-                        $exerciseRecords = $state[$exerciseId] ?? [];
+                        $contentKey = $content->id ?? $contentIndex;
+                        $exerciseRecords = $state[$contentKey] ?? [];
                     @endphp
-                    <div data-exercise-id="{{ $content->exercise->id }}">
+                    <div data-content-id="{{ $contentKey }}" data-exercise-id="{{ $content->exercise->id }}">
                         <strong>{{ $content->exercise->name }}</strong>
                         <hr>
                         @for ($i = 1; $i <= $content->set; $i++)
@@ -413,14 +413,14 @@
                         <div data-set-number="{{ $i }}" class="unit-exercise {{ $checked ? 'completed' : '' }}">
                             <div class="exercise-details">
                                 <label>
-                                    <input class="custom-checkbox" type="checkbox" name="records[{{ $content->exercise->id }}][{{ $i }}][completed]" value="1" onclick="toggleExerciseCompletion(this)" {{ $checked ? 'checked' : '' }}>
+                                    <input class="custom-checkbox" type="checkbox" name="records[{{ $contentKey }}][{{ $i }}][completed]" value="1" onclick="toggleExerciseCompletion(this)" {{ $checked ? 'checked' : '' }}>
                                     <span class="check-box"></span>
                                 </label>
                                 <label>Set {{ $i }} - Weight:</label>
-                                <input type="number" name="records[{{ $content->exercise->id }}][{{ $i }}][weight]"
+                                <input type="number" name="records[{{ $contentKey }}][{{ $i }}][weight]"
                                     value="{{ $weightValue }}" step="0.5" placeholder="Weight">
                                 <label>Reps:</label>
-                                <input type="number" name="records[{{ $content->exercise->id }}][{{ $i }}][rep]"
+                                <input type="number" name="records[{{ $contentKey }}][{{ $i }}][rep]"
                                     value="{{ $repValue }}" placeholder="Reps">
                             </div>
                             <div class="notes" style="{{ $notesValue ? '' : 'display:none;' }}">
@@ -438,7 +438,7 @@
                             </span>
                             <div class="notes-section" style="display: none; margin-top: 10px;">
                                 <label>Notes:</label>
-                                <textarea name="records[{{ $content->exercise->id }}][{{ $i }}][notes]" placeholder="Enter your notes here..." rows="3">{{ $notesValue }}</textarea>
+                                <textarea name="records[{{ $contentKey }}][{{ $i }}][notes]" placeholder="Enter your notes here..." rows="3">{{ $notesValue }}</textarea>
                                 <button type="button" onclick="hideNotesSection(this)">OK</button>
                             </div>
                         </div>
@@ -644,12 +644,12 @@
         function captureFormState() {
             let stateData = {};
 
-            const recordGroups = document.querySelectorAll('[data-exercise-id]');
+            // const recordGroups = document.querySelectorAll('[data-exercise-id]');
+            const recordGroups = document.querySelectorAll('[data-content-id]');
             recordGroups.forEach(group => {
-                const exerciseId = group.getAttribute('data-exercise-id');
+                // const exerciseId = group.getAttribute('data-exercise-id');
+                const contentId = group.getAttribute('data-content-id');
                 const setDivs = group.querySelectorAll('.unit-exercise');
-                
-                stateData[exerciseId] = {};
 
                 setDivs.forEach(div => {
                     const setNumber = div.getAttribute('data-set-number');
@@ -658,7 +658,13 @@
                     const rep = div.querySelector('input[name*="[rep]"]')?.value || '';
                     const notes = div.querySelector('textarea')?.value || '';
 
-                    stateData[exerciseId][setNumber] = {
+                    if (!stateData[contentId]) {  
+                        stateData[contentId] = {};  
+                    }
+
+                    console.log(stateData);
+
+                    stateData[contentId][setNumber] = {
                         completed,
                         weight,
                         rep,
@@ -726,7 +732,6 @@
                 const form = document.getElementById("workoutForm");
 
                 form.addEventListener("submit", function (event) {
-                    // 1️⃣ Perform front-end validation: Ensure at least one checkbox is checked
                     const checkboxes = document.querySelectorAll('input[type="checkbox"][name*="completed"]');
                     const isChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
 
@@ -743,6 +748,8 @@
                     }
                 });
             });
+
+            
 
         });
 

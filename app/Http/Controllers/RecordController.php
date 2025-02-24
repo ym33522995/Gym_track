@@ -33,6 +33,7 @@ class RecordController extends Controller
         // dd($newExercises);
 
         $state = session()->get('workout_temp_data', []);
+        // dd($state);
 
         if ($temporaryRecords->isEmpty()) {
             foreach ($template->templateContents as $content) {

@@ -247,25 +247,28 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             fetch('/exercise/all')
-                .then(response => {
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    if(data.success) {
+                    if (data.success) {
                         const dropdown = document.getElementById('exerciseDropdown');
 
+                        // Sort exercises alphabetically by name
+                        data.exercises.sort((a, b) => a.exercise_name.localeCompare(b.exercise_name));
+
+                        // Append sorted options to the dropdown
                         data.exercises.forEach(ex => {
                             const option = document.createElement('option');
                             option.value = ex.id;
                             option.textContent = `${ex.exercise_name} (${ex.category_name})`;
                             dropdown.appendChild(option);
-                        })
+                        });
                     }
                 })
                 .catch(error => {
-                    console.error("Error fetching exercise:", error);
+                    console.error("Error fetching exercises:", error);
                 });
         });
+
 
         
 
@@ -290,6 +293,7 @@
                             <p><strong>Exercise:</strong> ${record.exercise_name}</p>
                             <p><strong>Weight:</strong> ${record.weight}</p>
                             <p><strong>Reps:</strong> ${record.rep}</p>
+                            ${record.notes ? `<p><strong>Notes:</strong> ${record.notes}</p>` : ''}
                         </div>
                     `).join('');
                 } else {

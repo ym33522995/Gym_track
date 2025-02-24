@@ -241,6 +241,24 @@
             color: white;  /* Maintain white font color */
         }
 
+        .exercise-box .duplicate-btn {
+            background-color: #52057B;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        /* Button Hover Effect */
+        .exercise-box .duplicate-btn:hover {
+            background-color: #BC6FF1;
+            color: #000000;
+        }
+
 
     </style>
 </head>
@@ -290,7 +308,7 @@
                 @foreach($exercises as $exercise)
                     <div class="exercise-box">
                         <label>
-                            <input class="exercise-item" data-category="{{ $exercise->category->name }}" type="checkbox" name="exercises[{{ $exercise->id }}][selected]" value="1">
+                            <input class="exercise-item" data-exercise-id="{{ $exercise->id }}" data-category="{{ $exercise->category->name }}" type="checkbox" name="exercises[{{ $exercise->id }}][selected]" value="1">
                             <span class="checkbox-custom"></span>
                             {{ $exercise->name }}
                         </label>
@@ -299,6 +317,7 @@
                             <input type="number" name="exercises[{{ $exercise->id }}][rep]" placeholder="Reps">
                             <input type="number" name="exercises[{{ $exercise->id }}][set]" placeholder="Sets">
                         </div>
+                        <button type="button" class="duplicate-btn" onclick="duplicateSet(this)">Different weight</button>
                     </div>
                 @endforeach
             </div>
@@ -310,6 +329,29 @@
     </main>
 
     <script>
+        function duplicateSet(button) {
+            const setDiv = button.closest('div'); 
+            const exerciseId = setDiv.getAttribute('data-exercise-id'); 
+            const parentDiv = setDiv.parentNode;
+
+            const clone = setDiv.cloneNode(true);
+
+            const currentIndex = parentDiv.querySelectorAll(`[data-exercise-id="${exerciseId}"]`).length;
+
+            const inputs = clone.querySelectorAll('input');
+            inputs.forEach(input => {
+                const nameMatch = input.name.match(/exercises\[(\d+)\]\[(\d+)\]\[(\w+)\]/); 
+                if (nameMatch) {
+                    const fieldExerciseId = nameMatch[1]; 
+                    const fieldName = nameMatch[3]; 
+
+                    input.name = `exercises[${fieldExerciseId}][${currentIndex}][${fieldName}]`;
+                }
+            });
+
+            setDiv.parentNode.insertBefore(clone, setDiv.nextSibling);
+        }
+
         let originalOrder = [];
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -402,11 +444,15 @@
         function resetFilters() {
             const container = document.getElementById('exerciseContainer');
 
-            originalOrder.forEach(block => block.classList.remove('highlight'));
+            // originalOrder.forEach(block => block.classList.remove('highlight'));
 
             
-            originalOrder.forEach(block => {
-                block.style.display = 'flex';
+            originalOrder.forEach((block, index) => {
+                if (index < 12) {
+                    block.style.display = 'flex';
+                } else {
+                    block.style.display = 'none';
+                }
             });
 
             

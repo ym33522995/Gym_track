@@ -75,8 +75,8 @@
 
         .page-description {
             font-size: 16px;
-            margin-top: 10px;
             color: #000000;
+            padding-bottom: 10px;
         }
 
         .btn-primary {
@@ -166,11 +166,6 @@
                 height: 100vh; 
             }
         } */
-
-        .how-to-guide {
-            color: red;
-            padding-bottom: 10px;
-        }
     </style>
 </head>
 <body>
@@ -191,9 +186,10 @@
     </header>
     <main>
         <div class="header-section">
-            <h2 class="page-title">Welcome to Your Home Page</h2>
+            <h2 class="page-title">Welcome to Your Home Page.</h2>
+            <p style="color: red; font-weight: bold;">Go to "Template" to start your workout.</p>
+            <p style="color: red; font-weight: bold;">Go to "How To" to see how to use the app.</p>
             <p class="page-description">Below is the calendar and the body weight chart. You can enter or update today's weight, or choose any date.</p>
-            <p class="how-to-guide">Go to "How To" in the header to see how to use the app</p>
         </div>
 
         <div class="container-fluid">

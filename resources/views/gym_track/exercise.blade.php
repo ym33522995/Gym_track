@@ -214,9 +214,10 @@
         </div>
 
         <p>These are the exercises:</p>
+        <p>Click on the card to see how to do the exercise.</p>
         <div id="exerciseList" class="exercise-container">
             @foreach($exercises as $exercise)
-                <div class="exercise-box">
+                <div class="exercise-box" onclick="redirectToYoutube('{{ $exercise->name }}')">
                     <div class="exercise-item" data-category="{{ $exercise->category->name }}">{{ $exercise->name }}</div>
                 </div>
             @endforeach
@@ -273,6 +274,13 @@
 
             document.getElementById('noExerciseMessage').style.display = 'none';
             document.getElementById('searchExercise').value = ''; // Clear search input
+        }
+
+        function redirectToYoutube(exerciseName) {
+            const formattedName = encodeURIComponent(exerciseName);
+            const youtubeUrl = `https://www.youtube.com/results?search_query=${formattedName}+exercise`;
+
+            window.open(youtubeUrl, '_blank');
         }
 
     </script>

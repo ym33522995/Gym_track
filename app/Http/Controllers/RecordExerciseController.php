@@ -113,7 +113,8 @@ class RecordExerciseController extends Controller
                 'record_exercises.created_at as date',
                 'exercises.name as exercise_name',
                 'record_exercises.weight',
-                'record_exercises.rep'
+                'record_exercises.rep',
+                'record_exercises.notes',
             )
             ->orderBy('record_exercises.created_at', 'desc')
             ->get();

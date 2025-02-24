@@ -71,7 +71,6 @@ Route::post('/gemini-api', [BodyWeightController::class, 'getGeminiResponse']);
 // Route::post('/session/exercise/{exerciseId}/delete', [SessionController::class, 'deleteNewExerciseSet']);
 // Route::post('/session/exercise/{exerciseId}/duplicate', [SessionController::class, 'duplicateNewExerciseSet']);
 
-Route::get('/report/get-exercises', [RecordExerciseController::class, 'getRecordExercise']);
 
 
 
