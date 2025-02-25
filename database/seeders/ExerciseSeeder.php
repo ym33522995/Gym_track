@@ -16,7 +16,7 @@ class ExerciseSeeder extends Seeder
     {
         //
         $categoriesWithExercises = [
-            'Chest' => ['Bench Press', 'Push-Ups'],
+            'Chest' => ['Bench Press', 'Push-Ups', 'Pec Fly'],
             'Leg' => ['Squats', 'Lunges'],
             'Abs' => ['Sit-Ups', 'Plank'],
             'Back' => ['Pull-Ups', 'Deadlift'],
