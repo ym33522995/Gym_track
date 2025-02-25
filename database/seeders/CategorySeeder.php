@@ -22,7 +22,7 @@ class CategorySeeder extends Seeder
         $now = now();
 
         foreach($categories as $category) {
-            DB::table('category')->insertOrIgnore(
+            DB::table('categories')->insertOrIgnore(
                 [
                     'name' => $category,
                     'created_at' => $now, 

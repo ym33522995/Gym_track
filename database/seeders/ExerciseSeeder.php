@@ -23,13 +23,13 @@ class ExerciseSeeder extends Seeder
             'Shoulder' => ['Shoulder dumbell press', 'side raise'],
         ];
 
-        $categories = DB::table('category')->whereIn('name', array_keys($categoriesWithExercises))->get();
+        $categories = DB::table('categories')->whereIn('name', array_keys($categoriesWithExercises))->get();
 
         $now = now();
 
         foreach ($categories as $category) {
             foreach ($categoriesWithExercises[$category->name] as $exerciseName) {
-                DB::table('exercise')->insertOrIgnore(
+                DB::table('exercises')->insertOrIgnore(
                     [
                         'name' => $exerciseName,
                         'category_id' => $category->id,

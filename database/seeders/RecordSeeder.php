@@ -18,7 +18,7 @@ class RecordSeeder extends Seeder
         $now = now();
         $user = DB::table('users')->where('email', 'Jim@gmail.com')->first();
 
-        DB::table('record')->insertOrIgnore(
+        DB::table('records')->insertOrIgnore(
             [
                 'date' => $now,
                 'user_id' => $user->id,

@@ -18,7 +18,7 @@ class TemplateSeeder extends Seeder
         $user = DB::table('users')->where('email', 'Jim@gmail.com')->first();
 
         if ($user) {
-            DB::table('template')->insertOrIgnore([
+            DB::table('templates')->insertOrIgnore([
                 'name' => "push",
                 'user_id' => $user->id, 
             ]);
