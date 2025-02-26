@@ -166,6 +166,64 @@
                 height: 100vh; 
             }
         } */
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                height: auto;
+                padding: 10px 0;
+                text-align: center;
+            }
+
+            header nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .app-logo {
+                margin-bottom: 10px;
+            }
+
+            .container-fluid {
+                padding: 10px;
+            }
+
+            .row {
+                flex-direction: column;
+            }
+
+            .left-side, .right-side {
+                width: 100%;
+            }
+
+            #calendar {
+                max-height: 100vh;
+                overflow-y: auto;
+            }
+
+            #myWeightChart {
+                height: 40vh;
+                max-height: 200px;
+            }
+
+            .navigation-buttons {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            .modal-content {
+                width: 90%;
+                margin: auto;
+            }
+        }
+
     </style>
 </head>
 <body>
