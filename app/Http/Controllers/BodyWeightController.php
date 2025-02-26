@@ -111,7 +111,13 @@ class BodyWeightController extends Controller
     public function getGeminiResponse(Request $request)
     {
         // $api_key =getenv('GEMINI_API_KEY')
-        $api_key = getenv('GEMINI_API_KEY');
+        $api_key = env('GEMINI_API_KEY');
+        if (empty($api_key)) {
+            Log::error("GEMINI_API_KEY is not set in Heroku.");
+            return response()->json(['error' => 'API key is missing.'], 500);
+        } else {
+            Log::info("GEMINI_API_KEY is set correctly.");
+        }
         if (empty($api_key)) {
             Log::error("GEMINI_API_KEY is not set.");
             return response()->json(['error' => 'API key is missing.'], 500);
