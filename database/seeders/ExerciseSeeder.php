@@ -48,7 +48,7 @@ class ExerciseSeeder extends Seeder
                 'Wrist Curls', 'Reverse Wrist Curls', 'Farmer’s Walk', 'Towel Grip Pull-Ups', 'Finger Curls',
                 'Plate Pinch Hold', 'Dead Hangs', 'Hammer Curl', 'Reverse Barbell Curl', 'Rope Climbing'
             ],
-            'Full Body' => [
+            'Full body' => [
                 'Burpees', 'Kettlebell Swings', 'Clean and Press', 'Snatch', 'Deadlifts',
                 'Thrusters', 'Battle Ropes', 'Medicine Ball Slams', 'Sled Push', 'Jump Rope'
             ],
