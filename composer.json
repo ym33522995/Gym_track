@@ -7,6 +7,9 @@
     "require": {
         "php": "^8.1",
         "gemini-api-php/client": "^1.7",
+        "gemini-api-php/laravel": "^0.3.0",
+        "google-gemini-php/client": "1.0.4-beta",
+        "google-gemini-php/laravel": "^1.0",
         "guzzlehttp/guzzle": "^7.9",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",

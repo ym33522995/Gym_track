@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "524772aba77d1df02a0dbdadc6563508",
+    "content-hash": "defc3085f442c6bbb916aae4c3d7fd95",
     "packages": [
         {
             "name": "brick/math",
@@ -583,16 +583,16 @@
         },
         {
             "name": "gemini-api-php/client",
-            "version": "v1.7.1",
+            "version": "v1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gemini-api-php/client.git",
-                "reference": "6475b25e9abc533eedfe7370ff1015949a71bcf8"
+                "reference": "a48e61285d82b24117a5c8928dd1e504818f908b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gemini-api-php/client/zipball/6475b25e9abc533eedfe7370ff1015949a71bcf8",
-                "reference": "6475b25e9abc533eedfe7370ff1015949a71bcf8",
+                "url": "https://api.github.com/repos/gemini-api-php/client/zipball/a48e61285d82b24117a5c8928dd1e504818f908b",
+                "reference": "a48e61285d82b24117a5c8928dd1e504818f908b",
                 "shasum": ""
             },
             "require": {
@@ -644,9 +644,213 @@
             ],
             "support": {
                 "issues": "https://github.com/gemini-api-php/client/issues",
-                "source": "https://github.com/gemini-api-php/client/tree/v1.7.1"
+                "source": "https://github.com/gemini-api-php/client/tree/v1.7.2"
             },
-            "time": "2025-01-13T11:26:59+00:00"
+            "time": "2025-01-31T15:31:02+00:00"
+        },
+        {
+            "name": "gemini-api-php/laravel",
+            "version": "v0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gemini-api-php/laravel.git",
+                "reference": "fc17c037ad7f749f95aadb6501873ab525da5ad5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gemini-api-php/laravel/zipball/fc17c037ad7f749f95aadb6501873ab525da5ad5",
+                "reference": "fc17c037ad7f749f95aadb6501873ab525da5ad5",
+                "shasum": ""
+            },
+            "require": {
+                "gemini-api-php/client": "^1.3.1",
+                "illuminate/support": "^9.0 || ^10.0 || ^11.0",
+                "php": "^8.1",
+                "psr/container": "^1.0 || ^2.0",
+                "psr/http-client": "^1.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^7.8.1",
+                "guzzlehttp/psr7": "^2.0",
+                "laravel/framework": "^9.0 || ^10.0 || ^11.0",
+                "laravel/pint": "^1.13.6",
+                "pestphp/pest": "^2.27.0",
+                "pestphp/pest-plugin-arch": "^2.4.1",
+                "phpstan/phpstan": "^1.10.47",
+                "symfony/var-dumper": "^6.4.0|^7.0.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "GeminiAPI\\Laravel\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GeminiAPI\\Laravel\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Erdem Köse",
+                    "email": "erdemkose@gmail.com"
+                }
+            ],
+            "description": "Gemini API client for Laravel",
+            "keywords": [
+                "Gemini",
+                "ai",
+                "api",
+                "client",
+                "gemini pro",
+                "gemini pro vision",
+                "google",
+                "laravel",
+                "php",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/gemini-api-php/laravel/issues",
+                "source": "https://github.com/gemini-api-php/laravel/tree/v0.3.0"
+            },
+            "time": "2023-12-27T03:38:08+00:00"
+        },
+        {
+            "name": "google-gemini-php/client",
+            "version": "1.0.4-beta",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/google-gemini-php/client.git",
+                "reference": "395a0d3beceb32e99ca116e327668789e8a53363"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/google-gemini-php/client/zipball/395a0d3beceb32e99ca116e327668789e8a53363",
+                "reference": "395a0d3beceb32e99ca116e327668789e8a53363",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1.0",
+                "php-http/discovery": "^1.19.2"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^7.8.1",
+                "guzzlehttp/psr7": "^2.6.2",
+                "laravel/pint": "^1.18.1",
+                "mockery/mockery": "^1.6.7",
+                "pestphp/pest": "^2.30",
+                "phpstan/phpstan": "^1.10"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Gemini.php"
+                ],
+                "psr-4": {
+                    "Gemini\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fatih AYDIN",
+                    "email": "aydinfatih52@gmail.com"
+                }
+            ],
+            "description": "Gemini API is a supercharged PHP API client that allows you to interact with the Gemini API",
+            "keywords": [
+                "Gemini",
+                "client",
+                "gemini-pro",
+                "language",
+                "natural",
+                "nlp",
+                "php",
+                "processing",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/google-gemini-php/client/issues",
+                "source": "https://github.com/google-gemini-php/client/tree/1.0.4-beta"
+            },
+            "time": "2024-10-29T13:58:27+00:00"
+        },
+        {
+            "name": "google-gemini-php/laravel",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/google-gemini-php/laravel.git",
+                "reference": "ac83a7a3f5c438c1823af0ce939f3d17d61441ae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/google-gemini-php/laravel/zipball/ac83a7a3f5c438c1823af0ce939f3d17d61441ae",
+                "reference": "ac83a7a3f5c438c1823af0ce939f3d17d61441ae",
+                "shasum": ""
+            },
+            "require": {
+                "google-gemini-php/client": "^1.0",
+                "laravel/framework": "^9.0|^10.0|^11.0",
+                "php": "^8.1.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^7.8.1",
+                "laravel/pint": "^1.13.6",
+                "pestphp/pest": "^2.27.0",
+                "pestphp/pest-plugin-arch": "^2.4.1",
+                "phpstan/phpstan": "^1.10.47",
+                "symfony/var-dumper": "^6.4.0|^7.0.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Gemini\\Laravel\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Gemini\\Laravel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fatih AYDIN",
+                    "email": "aydinfatih52@gmail.com"
+                }
+            ],
+            "description": "Google Gemini PHP for Laravel is a supercharged PHP API client that allows you to interact with the Google Gemini AI API",
+            "keywords": [
+                "Gemini",
+                "api",
+                "client",
+                "language",
+                "laravel",
+                "natural",
+                "php",
+                "processing",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/google-gemini-php/laravel/issues",
+                "source": "https://github.com/google-gemini-php/laravel/tree/1.0.1"
+            },
+            "time": "2024-02-11T17:25:44+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -8333,7 +8537,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "google-gemini-php/client": 10
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

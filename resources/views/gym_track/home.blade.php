@@ -161,6 +161,74 @@
             color: #FFFFFF;
         }
 
+        /* Default (Laptop) - Side-by-side Layout */
+        .row {
+            display: flex; 
+            flex-wrap: wrap; 
+            align-items: flex-start; 
+        }
+
+        .left-side {
+            width: 50%; 
+            max-width: 50%;
+        }
+
+        .right-side {
+            width: 50%; 
+            max-width: 50%;
+        }
+
+        /* Responsive Mobile Layout */
+        @media (max-width: 768px) {
+            /* Ensure row stacks properly */
+            .row {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+
+            /* Make both elements take full width */
+            .left-side, .right-side {
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+            }
+
+            /* Ensure calendar and chart are centered */
+            #calendar, #myWeightChart {
+                width: 100%;
+                max-width: 90%;
+                height: auto;
+                margin-bottom: 20px;
+            }
+
+            /* Adjust container for smaller screens */
+            .container-fluid {
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+                margin: 0 auto;
+            }
+
+            /* Make navigation buttons stack vertically */
+            .navigation-buttons {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .navigation-buttons .btn {
+                width: 90%;
+            }
+
+            /* Modal should fit better on smaller screens */
+            .modal-content {
+                width: 95%;
+                margin: auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -189,11 +257,11 @@
 
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-6 left-side">
+                <div class="col-12 left-side">
                     <div id='calendar'></div>
                 </div>
                 
-                <div class="col-md-6 right-side">
+                <div class="col-12 right-side">
                     <div class="total-weights-container">
                         <div class="total-weights"></div>
                         <div id="gemini-response"></div>
@@ -427,28 +495,13 @@
             fetchChartData();
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            axios.get('/total-weight')
-            .then(response => {
-                const totalWeight = response.data;
-                const totalWeightDiv = document.querySelector(".total-weights");
-                totalWeightDiv.innerHTML = `<p>Here is the total weight you have lifted so far: <strong>${totalWeight} kg</strong></p>`;
-
-                setTimeout(() => {
-                    getGeminiEquivalent(totalWeight);
-                }, 500);
-            })
-            .catch(error => {
-                console.error('Error fetching total weight:', error);
-                document.getElementById('totalWeight').textContent = 'Error loading total weight.';
-            });
-        });
-
 
         async function getGeminiEquivalent(totalWeight) {
             totalWeight = totalWeight ?? 0;
             const geminiResponseElement = document.getElementById('gemini-response');
             geminiResponseElement.innerHTML = "Waiting for Gemini to respond...";
+
+            // console.log("Entered getGeminiEquivalent", totalWeight)
             
             try {
                 const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
@@ -457,15 +510,10 @@
                 }
 
                 const csrfToken = csrfTokenElement.getAttribute('content');
-                const response = await axios.post('/gemini-api', { weight: totalWeight }, {
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken }
-                });
+                const response = await axios.post('/gemini-api', { weight: totalWeight });
 
                 console.log("Gemini API Response:", response.data);
 
-                // Get the display element
-                // const geminiResponseElement = document.getElementById('gemini-response');
-                // geminiResponseElement.innerHTML = "Waiting for Gemini to respond...";
                 if (!geminiResponseElement) {
                     console.error("Error: No element with ID 'gemini-response' found.");
                     return;
@@ -485,6 +533,24 @@
                 }
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            axios.get('/total-weight')
+            .then(response => {
+                const totalWeight = response.data;
+                const totalWeightDiv = document.querySelector(".total-weights");
+                totalWeightDiv.innerHTML = `<p>Here is the total weight you have lifted so far: <strong>${totalWeight} kg</strong></p>`;
+                return totalWeight;
+            })
+            .then((totalWeight) => {
+                console.log(totalWeight);
+                getGeminiEquivalent(totalWeight);
+            })
+            .catch(error => {
+                console.error('Error fetching total weight:', error);
+                document.getElementById('totalWeight').textContent = 'Error loading total weight.';
+            });
+        });
 
     </script>
 </body>
