@@ -49,13 +49,12 @@ class RecordExerciseController extends Controller
 
     public function getRecordExercise(Request $request)
     {
-        $date = $request->input('date', now()->format('Y-m-d')); // Default to today's date
-        $userId = auth()->id(); // Get the logged-in user ID
+        $date = $request->input('date', now()->format('Y-m-d')); 
+        $userId = auth()->id(); 
 
-        // Fetch all exercises done on the specified date
         $exercises = DB::table('record_exercises')
             ->join('exercises', 'record_exercises.exercise_id', '=', 'exercises.id')
-            ->whereDate('record_exercises.created_at', $date) // Filter by date
+            ->whereDate('record_exercises.created_at', $date)
             ->whereExists(function ($query) use ($userId) {
                 $query->select(DB::raw(1))
                     ->from('records')
@@ -63,7 +62,7 @@ class RecordExerciseController extends Controller
                     ->where('records.user_id', $userId);
             })
             ->select(
-                'exercises.name as exercise_name', // Exercise name from the `exercises` table
+                'exercises.name as exercise_name',
                 'record_exercises.weight',
                 'record_exercises.rep',
                 'record_exercises.notes',

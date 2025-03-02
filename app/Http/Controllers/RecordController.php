@@ -92,21 +92,38 @@ class RecordController extends Controller
             'user_id' => $userId,
         ])->save();
 
-        foreach($request->input('records') as $exerciseId => $sets) {
+        // foreach($request->input('records') as $exerciseId => $sets) {
+        //     foreach($sets as $set) {
+        //         if (isset($set['completed']) && $set['completed'] == 1) {
+        //             DB::table('record_exercises')->insert([
+        //                 'record_id' => $record->id,
+        //                 'exercise_id' => $exerciseId,
+        //                 'weight' => $set['weight'],
+        //                 'rep' => $set['rep'],
+        //                 'notes' => $set['notes'] ?? null,
+        //                 'created_at' => now(),
+        //                 'updated_at' => now(),
+        //             ]);
+        //         }
+        //     }
+        // }
+
+        foreach($request->input('records') as $contentKey => $sets) {
             foreach($sets as $set) {
-                if (isset($set['completed']) && $set['completed'] == 1) {
+                $exerciseId = $set['exercise_id'];
+                if (!empty($set['completed'])) {
                     DB::table('record_exercises')->insert([
-                        'record_id' => $record->id,
+                        'record_id'   => $record->id,
                         'exercise_id' => $exerciseId,
-                        'weight' => $set['weight'],
-                        'rep' => $set['rep'],
-                        'notes' => $set['notes'] ?? null,
-                        'created_at' => now(),
-                        'updated_at' => now(),
+                        'weight'      => $set['weight'] ?? 0,
+                        'rep'         => $set['rep'] ?? 0,
+                        'notes'       => $set['notes'] ?? null,
+                        'created_at'  => now(),
+                        'updated_at'  => now(),
                     ]);
                 }
             }
-        }
+        }        
 
         session()->forget('new_exercises');
         session()->forget('workout_temp_data');

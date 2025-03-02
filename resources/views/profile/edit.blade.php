@@ -105,6 +105,54 @@
             background-color: #f2f2f2;
         }
 
+        @media (max-width: 768px) {
+            .custom-header {
+                background-color: #52057B;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;        /* Fill entire browser width */
+                max-width: 100%;     /* Prevent accidental overflow */
+                height: 60px;
+                box-sizing: border-box;  /* Let padding be part of total width */
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 0 5px;
+                color: #FFFFFF;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+            }
+
+
+            .custom-header nav ul {
+                display: flex;
+                flex-wrap: nowrap;   
+                gap: 9px;
+            }
+
+            .custom-header nav ul li a {
+                font-size: 12px;
+            }
+
+            .app-logo {
+                max-height: 40px;
+                margin-bottom: 0; 
+                margin-right: 1px;
+                margin-left: 0;
+            }
+
+            .nav-right {
+                display: flex !important;
+                order: 3; 
+                margin-right: auto;
+                margin-left: 10px;
+            }
+        }
+
+
+
+
     </style>
 
     <x-slot name="header">
@@ -121,7 +169,7 @@
                     <li><a href="/profile">Profile</a></li>
                 </ul>
             </nav>
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <div class="flex sm:items-center sm:ms-6 nav-right">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">

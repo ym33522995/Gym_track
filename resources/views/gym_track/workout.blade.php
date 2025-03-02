@@ -416,6 +416,7 @@
                                     <input class="custom-checkbox" type="checkbox" name="records[{{ $contentKey }}][{{ $i }}][completed]" value="1" onclick="toggleExerciseCompletion(this)" {{ $checked ? 'checked' : '' }}>
                                     <span class="check-box"></span>
                                 </label>
+                                <input type="hidden" name="records[{{ $contentKey }}][{{ $i }}][exercise_id]" value="{{ $content->exercise->id }}">
                                 <label>Set {{ $i }} - Weight:</label>
                                 <input type="number" name="records[{{ $contentKey }}][{{ $i }}][weight]"
                                     value="{{ $weightValue }}" step="0.5" placeholder="Weight">

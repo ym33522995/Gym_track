@@ -179,53 +179,92 @@
         }
 
         /* Responsive Mobile Layout */
-        @media (max-width: 768px) {
-            /* Ensure row stacks properly */
-            .row {
-                flex-direction: column;
-                align-items: center;
+        @media (max-width: 980px) {
+            header {
+                height: 80px;
+                width: 100vw; /* 100% of the viewport width */
+                max-width: 100%;
+                text-align: left;
+            }
+
+            header nav {
+                display: flex;
+                justify-content: left; /* Center the nav items */
                 width: 100%;
             }
 
-            /* Make both elements take full width */
-            .left-side, .right-side {
-                width: 100%;
-                max-width: 100%;
+            header nav ul {
+                display: flex;
+                flex-wrap: wrap; /* Allow items to wrap if needed */
+                justify-content: center; /* Ensure items are centered */
                 padding: 0;
+                margin: 0;
+                gap: 10px;
+            }
+
+            header nav ul li {
+                display: inline-block;
+            }
+
+            header nav ul li a {
+                font-size: 20px;
+                padding: 5px;
+            }
+
+            .app-logo {
+                max-height: 40px; /* Reduce the size for consistency */
+                width: auto;
+                margin-right: 5px;
+            }
+
+            /* Override Bootstrap row behavior to ensure stacking */
+            .row {
+                display: flex !important;
+                flex-direction: column !important;  /* Force vertical stacking */
+                align-items: center !important;
+                justify-content: center !important;
+                width: 100% !important;
+                margin: 0 auto;
+            }
+
+            /* Full width for calendar and graph */
+            .left-side, .right-side {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
             }
 
             /* Ensure calendar and chart are centered */
             #calendar, #myWeightChart {
-                width: 100%;
-                max-width: 90%;
-                height: auto;
-                margin-bottom: 20px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
             }
 
             /* Adjust container for smaller screens */
             .container-fluid {
-                width: 100%;
-                max-width: 100%;
-                padding: 0;
-                margin: 0 auto;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 auto !important;
             }
 
             /* Make navigation buttons stack vertically */
             .navigation-buttons {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 10px;
-                margin-top: 10px;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 10px !important;
+                margin-top: 10px !important;
             }
 
             .navigation-buttons .btn {
-                width: 90%;
+                width: 90% !important;
             }
 
             /* Modal should fit better on smaller screens */
             .modal-content {
-                width: 95%;
+                width: 95% !important;
                 margin: auto;
             }
         }
@@ -257,11 +296,11 @@
 
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12 left-side">
+                <div class="col-md-6 col-12 left-side">
                     <div id='calendar'></div>
                 </div>
                 
-                <div class="col-12 right-side">
+                <div class="col-md-6 col-12 right-side">
                     <div class="total-weights-container">
                         <div class="total-weights"></div>
                         <div id="gemini-response"></div>

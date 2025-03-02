@@ -304,7 +304,105 @@
             background-color: #BC6FF1; /* Hover background color */
         }
 
+        /* GENERAL MOBILE STYLES */
+        @media (max-width: 980px) {
+            /* Ensure header and nav items are more accessible */
+            header {
+                background-color: #52057B;
+                width: 100vw;        /* Fill entire browser width */
+                max-width: 100%;     /* Prevent accidental overflow */
+                height: 60px;
+                box-sizing: border-box;  /* Let padding be part of total width */
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 0 5px;
+                color: #FFFFFF;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+            }
 
+
+            header nav ul {
+                display: flex;
+                flex-wrap: nowrap;   
+                gap: 9px;
+            }
+
+            header nav ul li a {
+                font-size: 12px;
+            }
+
+            .template-container {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding: 10px;
+                gap: 10px;
+                justify-content: flex-start;
+                scroll-behavior: smooth;
+            }
+
+            .template-item {
+                min-width: 80%;  /* Make templates take up almost full screen width */
+                height: auto;
+            }
+
+            /* Scroll buttons for navigating templates */
+            .scroll-button {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+                display: flex; /* Always show scroll buttons on mobile */
+            }
+
+            .scroll-button-left {
+                left: 5px;
+            }
+
+            .scroll-button-right {
+                right: 5px;
+            }
+
+            /* Reposition + button to the bottom-left */
+            .create-button {
+                right: 20px;
+                bottom: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+
+            /* Center modal and optimize for mobile */
+            .modal-content {
+                width: 90%;
+                padding: 15px;
+                font-size: 14px;
+            }
+
+            /* Adjust action buttons */
+            .button-group {
+                flex-direction: row;
+                gap: 10px;
+            }
+
+            .action-button {
+                width: 100%;
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            /* Make text size larger for better readability */
+            .exercise-title {
+                font-size: 20px;
+            }
+
+            /* Ensure template logos don't break the layout */
+            .template-logo {
+                max-width: 80%;
+                height: auto;
+            }
+        }
     </style>
 </head>
 <body>

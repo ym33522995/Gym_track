@@ -134,7 +134,7 @@ class BodyWeightController extends Controller
         // Log::info("This is the API key {$api_key}");
 
         $totalWeight = $request->input('weight');
-        $prompt = "Tell me fun fact about {$totalWeight} kg in one sentence. Be precise.";
+        $prompt = "Tell me fun fact about {$totalWeight} kg in one sentence. Double check your answer and if it is not accurate, reproduce it until it is accurate.";
 
         try {
             $response = $client->geminiFlash()->generateContent($prompt)->text();

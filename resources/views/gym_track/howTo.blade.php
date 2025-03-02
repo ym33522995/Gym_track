@@ -65,6 +65,34 @@
             display: block; /* Ensures proper spacing */
             margin: 10px auto 100px; 
         }
+
+        @media (max-width: 980px) {
+            header {
+                background-color: #52057B;
+                width: 100vw;        /* Fill entire browser width */
+                max-width: 100%;     /* Prevent accidental overflow */
+                height: 60px;
+                box-sizing: border-box;  /* Let padding be part of total width */
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 0 5px;
+                color: #FFFFFF;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+            }
+
+
+            header nav ul {
+                display: flex;
+                flex-wrap: nowrap;   
+                gap: 9px;
+            }
+
+            header nav ul li a {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
